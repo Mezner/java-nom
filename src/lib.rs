@@ -157,6 +157,21 @@ pub(self) mod parsers {
         ))(i)
     }
 
+    fn assignment_operator_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("=")(i)
+    }
+
+    fn assignment_operator_plus_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("+=")(i)
+    }
+
+    pub fn assignment_operator(i: &str) -> nom::IResult<&str, &str> {
+        nom::branch::alt((
+            assignment_operator_equals,
+            assignment_operator_plus_equals
+        ))(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -244,6 +259,25 @@ pub(self) mod parsers {
             assert_eq!(basic_type("float"), Ok(("", "float")));
             assert_eq!(basic_type("double"), Ok(("", "double")));
             assert_eq!(basic_type("boolean"), Ok(("", "boolean")));
+        }
+
+        #[test]
+        fn test_assignment_operator() {
+            assert_eq!(assignment_operator("="), Ok(("", "=")));
+            assert_eq!(assignment_operator("+="), Ok(("", "+=")));
+            assert_eq!(assignment_operator("somethingelse"), Err(nom::Err::Error(("somethingelse", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_equals() {
+            assert_eq!(assignment_operator_equals("="), Ok(("", "=")));
+            assert_eq!(assignment_operator_equals("+="), Err(nom::Err::Error(("+=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_plus_equals() {
+            assert_eq!(assignment_operator_plus_equals("+="), Ok(("", "+=")));
+            assert_eq!(assignment_operator_plus_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
     }
 }
