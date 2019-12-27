@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 use std::io::BufRead;
-use std::io::Read;
 
 #[derive(Default)]
 pub struct ParseError;
