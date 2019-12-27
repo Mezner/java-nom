@@ -78,6 +78,10 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("short")(i)
     }
 
+    fn basic_type(i: &str) -> nom::IResult<&str, &str> {
+        nom::branch::alt((basic_type_byte, basic_type_short))(i)
+    }
+
     pub fn parse_line(i: &str) -> nom::IResult<&str, Mount> {
         match nom::combinator::all_consuming(nom::sequence::tuple((
             nom::combinator::map_parser(not_whitespace, transform_escaped),
@@ -171,6 +175,12 @@ pub(self) mod parsers {
         fn test_basic_type_short() {
             assert_eq!(basic_type_short("short"), Ok(("", "short")));
             assert_eq!(basic_type_short("not short"), Err(nom::Err::Error(("not short", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_basic_type() {
+            assert_eq!(basic_type("short"), Ok(("", "short")));
+            assert_eq!(basic_type("somethingelse"), Err(nom::Err::Error(("somethingelse", nom::error::ErrorKind::Tag))));
         }
     }
 }
