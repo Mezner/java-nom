@@ -2,17 +2,18 @@ use std::path::PathBuf;
 use std::io::BufRead;
 use std::boxed::Box;
 use std::error::Error;
+use std::fmt::{Display, Debug};
 
 #[derive(Default)]
 pub struct ParseError;
 
-impl std::fmt::Display for ParseError {
+impl Display for ParseError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "A parsing error occurred.")
     }
 }
 
-impl std::fmt::Debug for ParseError {
+impl Debug for ParseError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         <ParseError as std::fmt::Display>::fmt(self, f)
     }
@@ -20,22 +21,19 @@ impl std::fmt::Debug for ParseError {
 
 impl std::error::Error for ParseError { }
 
-#[derive(Clone, Default, Debug)]
-pub struct Mount {
-    pub device: String,
-    pub mount_point: String,
-    pub file_system_type: String,
-    pub options: Vec<String>,
-}
-
-pub fn read_lines(path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn read_lines(path: &PathBuf) -> Result<Vec<BasicType>, Box<dyn Error>> {
     let file = std::fs::File::open(path)?;
     let reader = std::io::BufReader::new(file);
     let mut lines = Vec::new();
     for line in reader.lines() {
         match parsers::basic_type(&line?) {
             Ok((_, m)) => {
-                lines.push(m.to_string());
+                match BasicType::from_str(m) {
+                    Ok(t) => {
+                        lines.push(t);
+                    },
+                    Err(_) => return Err(ParseError::default().into())
+                }
             }
             Err(_) => return Err(ParseError::default().into())
         }
@@ -43,9 +41,50 @@ pub fn read_lines(path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
     Ok(lines)
 }
 
-pub(self) mod parsers {
-    use super::Mount;
+#[derive(Clone, Debug)]
+pub enum BasicType {
+    Byte,
+    Short,
+    Char,
+    Int,
+    Long,
+    Float,
+    Double,
+    Boolean,
+}
 
+impl BasicType {
+    fn from_str(i: &str) -> Result<BasicType, Box<dyn Error>>{
+        match i {
+            "byte" => Ok(BasicType::Byte),
+            "short" => Ok(BasicType::Short),
+            "char" => Ok(BasicType::Char),
+            "int" => Ok(BasicType::Int),
+            "long" => Ok(BasicType::Long),
+            "float" => Ok(BasicType::Float),
+            "double" => Ok(BasicType::Double),
+            "boolean" => Ok(BasicType::Boolean),
+            _ => Err(ParseError::default().into())
+        }
+    }
+}
+
+impl Display for BasicType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            BasicType::Byte => write!(f, "byte"),
+            BasicType::Short => write!(f, "short"),
+            BasicType::Char => write!(f, "char"),
+            BasicType::Int => write!(f, "int"),
+            BasicType::Long => write!(f, "long"),
+            BasicType::Float => write!(f, "float"),
+            BasicType::Double => write!(f, "double"),
+            BasicType::Boolean => write!(f, "boolean"),
+        }
+    }
+}
+
+pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
     }
@@ -118,46 +157,6 @@ pub(self) mod parsers {
         ))(i)
     }
 
-    pub fn parse_line(i: &str) -> nom::IResult<&str, Mount> {
-        match nom::combinator::all_consuming(nom::sequence::tuple((
-            nom::combinator::map_parser(not_whitespace, transform_escaped),
-            nom::character::complete::space1,
-            nom::combinator::map_parser(not_whitespace, transform_escaped),
-            nom::character::complete::space1,
-            not_whitespace, // file_system_type
-            nom::character::complete::space1,
-            mount_opts, // options
-            nom::character::complete::space1,
-            nom::character::complete::char('0'),
-            nom::character::complete::space1,
-            nom::character::complete::char('0'),
-            nom::character::complete::space0,
-        )))(i) {
-            Ok((remaining_input, (
-                device,
-                _,
-                mount_point,
-                _,
-                file_system_type,
-                _,
-                options,
-                _,
-                _,
-                _,
-                _,
-                _,
-            ))) => {
-                Ok((remaining_input, Mount {
-                    device,
-                    mount_point,
-                    file_system_type: file_system_type.to_string(),
-                    options
-                }))
-            },
-            Err(e) => Err(e)
-        }
-    }
-
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -184,21 +183,6 @@ pub(self) mod parsers {
         #[test]
         fn test_mount_opts() {
             assert_eq!(mount_opts("a,bc,d\\040e"), Ok(("", vec!["a".to_string(), "bc".to_string(), "d e".to_string()])));
-        }
-
-        #[test]
-        fn test_parse_line() {
-            let mount = Mount{
-                device: "device".to_string(),
-                mount_point: "mount_point".to_string(),
-                file_system_type: "file_system_type".to_string(),
-                options: vec!["options".to_string(), "a".to_string(), "b=c".to_string(), "d e".to_string()]
-            };
-            let (_, expected) = parse_line("device mount_point file_system_type options,a,b=c,d\\040e 0 0").unwrap();
-            assert_eq!(mount.device, expected.device);
-            assert_eq!(mount.mount_point, expected.mount_point);
-            assert_eq!(mount.file_system_type, expected.file_system_type);
-            assert_eq!(mount.options, expected.options);
         }
 
         #[test]
