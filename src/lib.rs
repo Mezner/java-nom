@@ -82,8 +82,17 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("char")(i)
     }
 
+    fn basic_type_int(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("int")(i)
+    }
+
     fn basic_type(i: &str) -> nom::IResult<&str, &str> {
-        nom::branch::alt((basic_type_byte, basic_type_short, basic_type_char))(i)
+        nom::branch::alt((
+            basic_type_byte,
+            basic_type_short,
+            basic_type_char,
+            basic_type_int
+        ))(i)
     }
 
     pub fn parse_line(i: &str) -> nom::IResult<&str, Mount> {
@@ -185,6 +194,12 @@ pub(self) mod parsers {
         fn test_basic_type_char() {
             assert_eq!(basic_type_char("char"), Ok(("", "char")));
             assert_eq!(basic_type_char("not char"), Err(nom::Err::Error(("not char", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_basic_type_int() {
+            assert_eq!(basic_type_int("int"), Ok(("", "int")));
+            assert_eq!(basic_type_int("not int"), Err(nom::Err::Error(("not int", nom::error::ErrorKind::Tag))));
         }
 
         #[test]
