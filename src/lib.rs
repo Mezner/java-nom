@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 use std::io::BufRead;
+use std::boxed::Box;
+use std::error::Error;
 
 #[derive(Default)]
 pub struct ParseError;
@@ -26,19 +28,19 @@ pub struct Mount {
     pub options: Vec<String>,
 }
 
-pub fn mounts(path: &PathBuf) -> Result<Vec<Mount>, std::boxed::Box<dyn std::error::Error>> {
+pub fn read_lines(path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
     let file = std::fs::File::open(path)?;
     let reader = std::io::BufReader::new(file);
-    let mut mounts = Vec::new();
+    let mut lines = Vec::new();
     for line in reader.lines() {
-        match parsers::parse_line(&line?) {
+        match parsers::basic_type(&line?) {
             Ok((_, m)) => {
-                mounts.push(m);
+                lines.push(m.to_string());
             }
             Err(_) => return Err(ParseError::default().into())
         }
     }
-    Ok(mounts)
+    Ok(lines)
 }
 
 pub(self) mod parsers {
@@ -102,7 +104,8 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("boolean")(i)
     }
 
-    fn basic_type(i: &str) -> nom::IResult<&str, &str> {
+    //TODO: Remove pub later.
+    pub fn basic_type(i: &str) -> nom::IResult<&str, &str> {
         nom::branch::alt((
             basic_type_byte,
             basic_type_short,
