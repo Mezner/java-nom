@@ -86,12 +86,32 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("int")(i)
     }
 
+    fn basic_type_long(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("long")(i)
+    }
+
+    fn basic_type_float(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("float")(i)
+    }
+
+    fn basic_type_double(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("double")(i)
+    }
+
+    fn basic_type_boolean(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("boolean")(i)
+    }
+
     fn basic_type(i: &str) -> nom::IResult<&str, &str> {
         nom::branch::alt((
             basic_type_byte,
             basic_type_short,
             basic_type_char,
-            basic_type_int
+            basic_type_int,
+            basic_type_long,
+            basic_type_float,
+            basic_type_double,
+            basic_type_boolean
         ))(i)
     }
 
@@ -203,9 +223,40 @@ pub(self) mod parsers {
         }
 
         #[test]
+        fn test_basic_type_long() {
+            assert_eq!(basic_type_long("long"), Ok(("", "long")));
+            assert_eq!(basic_type_long("not long"), Err(nom::Err::Error(("not long", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_basic_type_float() {
+            assert_eq!(basic_type_float("float"), Ok(("", "float")));
+            assert_eq!(basic_type_float("not float"), Err(nom::Err::Error(("not float", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_basic_type_double() {
+            assert_eq!(basic_type_double("double"), Ok(("", "double")));
+            assert_eq!(basic_type_double("not double"), Err(nom::Err::Error(("not double", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_basic_type_boolean() {
+            assert_eq!(basic_type_boolean("boolean"), Ok(("", "boolean")));
+            assert_eq!(basic_type_boolean("not boolean"), Err(nom::Err::Error(("not boolean", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
         fn test_basic_type() {
+            assert_eq!(basic_type("byte"), Ok(("", "byte")));
             assert_eq!(basic_type("short"), Ok(("", "short")));
             assert_eq!(basic_type("somethingelse"), Err(nom::Err::Error(("somethingelse", nom::error::ErrorKind::Tag))));
+            assert_eq!(basic_type("char"), Ok(("", "char")));
+            assert_eq!(basic_type("int"), Ok(("", "int")));
+            assert_eq!(basic_type("long"), Ok(("", "long")));
+            assert_eq!(basic_type("float"), Ok(("", "float")));
+            assert_eq!(basic_type("double"), Ok(("", "double")));
+            assert_eq!(basic_type("boolean"), Ok(("", "boolean")));
         }
     }
 }
