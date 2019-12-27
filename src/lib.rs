@@ -70,6 +70,10 @@ pub(self) mod parsers {
         )(i)
     }
 
+    fn basic_type_byte(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("byte")(i)
+    }
+
     pub fn parse_line(i: &str) -> nom::IResult<&str, Mount> {
         match nom::combinator::all_consuming(nom::sequence::tuple((
             nom::combinator::map_parser(not_whitespace, transform_escaped),
@@ -151,6 +155,12 @@ pub(self) mod parsers {
             assert_eq!(mount.mount_point, expected.mount_point);
             assert_eq!(mount.file_system_type, expected.file_system_type);
             assert_eq!(mount.options, expected.options);
+        }
+
+        #[test]
+        fn test_basic_type_byte() {
+            assert_eq!(basic_type_byte("byte"), Ok(("", "byte")));
+            assert_eq!(basic_type_byte("not byte"), Err(nom::Err::Error(("not byte", nom::error::ErrorKind::Tag))));
         }
     }
 }
