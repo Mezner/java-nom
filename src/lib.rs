@@ -363,6 +363,106 @@ pub(self) mod parsers {
         ))(i)
     }
 
+    fn infix_operator_or(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("||")(i)
+    }
+
+    fn infix_operator_and(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("&&")(i)
+    }
+
+    fn infix_operator_single_or(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("|")(i)
+    }
+
+    fn infix_operator_xor(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("^")(i)
+    }
+
+    fn infix_operator_single_and(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("&")(i)
+    }
+
+    fn infix_operator_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("==")(i)
+    }
+
+    fn infix_operator_not_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("!=")(i)
+    }
+
+    fn infix_operator_less_than(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("<")(i)
+    }
+
+    fn infix_operator_greater_than(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">")(i)
+    }
+
+    fn infix_operator_less_than_or_equal(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("<=")(i)
+    }
+
+    fn infix_operator_greater_than_or_equal(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">=")(i)
+    }
+
+    fn infix_operator_left_shift(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("<<")(i)
+    }
+
+    fn infix_operator_right_shift_signed(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">>")(i)
+    }
+
+    fn infix_operator_right_shift_unsigned(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">>>")(i)
+    }
+
+    fn infix_operator_add(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("+")(i)
+    }
+
+    fn infix_operator_subtract(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("-")(i)
+    }
+
+    fn infix_operator_multiply(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("*")(i)
+    }
+
+    fn infix_operator_divide(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("/")(i)
+    }
+
+    fn infix_operator_modulo(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("%")(i)
+    }
+
+    fn infix_operator(i: &str) -> nom::IResult<&str, &str> {
+        nom::branch::alt((
+            infix_operator_or,
+            infix_operator_and,
+            infix_operator_single_or,
+            infix_operator_xor,
+            infix_operator_single_and,
+            infix_operator_equals,
+            infix_operator_not_equals,
+            infix_operator_less_than,
+            infix_operator_greater_than,
+            infix_operator_less_than_or_equal,
+            infix_operator_greater_than_or_equal,
+            infix_operator_left_shift,
+            infix_operator_right_shift_signed,
+            infix_operator_right_shift_unsigned,
+            infix_operator_add,
+            infix_operator_subtract,
+            infix_operator_multiply,
+            infix_operator_divide,
+            infix_operator_modulo,
+        ))(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
