@@ -53,6 +53,20 @@ pub enum BasicType {
     Boolean,
 }
 
+pub enum AssignmentOperator {
+    Equals,
+    PlusEquals,
+    MinusEquals,
+    TimesEquals,
+    DivideEquals,
+    AndEquals,
+    OrEquals,
+    ModuloEquals,
+    LeftShiftAssignment,
+    RightShiftSigned,
+    UnsignedRightShift,
+}
+
 impl BasicType {
     fn from_str(i: &str) -> Result<BasicType, Box<dyn Error>>{
         match i {
