@@ -53,20 +53,6 @@ pub enum BasicType {
     Boolean,
 }
 
-pub enum AssignmentOperator {
-    Equals,
-    PlusEquals,
-    MinusEquals,
-    TimesEquals,
-    DivideEquals,
-    AndEquals,
-    OrEquals,
-    ModuloEquals,
-    LeftShiftAssignment,
-    RightShiftSigned,
-    UnsignedRightShift,
-}
-
 impl BasicType {
     fn from_str(i: &str) -> Result<BasicType, Box<dyn Error>>{
         match i {
@@ -94,6 +80,61 @@ impl Display for BasicType {
             BasicType::Float => write!(f, "float"),
             BasicType::Double => write!(f, "double"),
             BasicType::Boolean => write!(f, "boolean"),
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub enum AssignmentOperator {
+    Equals,
+    PlusEquals,
+    MinusEquals,
+    TimesEquals,
+    DivideEquals,
+    AndEquals,
+    OrEquals,
+    XorEquals,
+    ModuloEquals,
+    LeftShiftEquals,
+    RightShiftSignedEquals,
+    RightShiftUnsignedEquals,
+}
+
+impl AssignmentOperator {
+    fn from_str(i: &str) -> Result<AssignmentOperator, Box<dyn Error>> {
+        match i {
+            "=" => Ok(AssignmentOperator::Equals),
+            "+=" => Ok(AssignmentOperator::PlusEquals),
+            "-=" => Ok(AssignmentOperator::MinusEquals),
+            "*=" => Ok(AssignmentOperator::TimesEquals),
+            "/=" => Ok(AssignmentOperator::DivideEquals),
+            "&=" => Ok(AssignmentOperator::AndEquals),
+            "|=" => Ok(AssignmentOperator::OrEquals),
+            "^=" => Ok(AssignmentOperator::XorEquals),
+            "%=" => Ok(AssignmentOperator::ModuloEquals),
+            "<<=" => Ok(AssignmentOperator::LeftShiftEquals),
+            ">>=" => Ok(AssignmentOperator::RightShiftSignedEquals),
+            ">>>=" => Ok(AssignmentOperator::RightShiftUnsignedEquals),
+            _ => Err(ParseError::default().into())
+        }
+    }
+}
+
+impl Display for AssignmentOperator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            AssignmentOperator::Equals => write!(f, "="),
+            AssignmentOperator::PlusEquals => write!(f, "+="),
+            AssignmentOperator::MinusEquals => write!(f, "-="),
+            AssignmentOperator::TimesEquals => write!(f, "*="),
+            AssignmentOperator::DivideEquals => write!(f, "/="),
+            AssignmentOperator::AndEquals => write!(f, "&="),
+            AssignmentOperator::OrEquals => write!(f, "|="),
+            AssignmentOperator::XorEquals => write!(f, "^="),
+            AssignmentOperator::ModuloEquals => write!(f, "%="),
+            AssignmentOperator::LeftShiftEquals => write!(f, "<<="),
+            AssignmentOperator::RightShiftSignedEquals => write!(f, ">>="),
+            AssignmentOperator::RightShiftUnsignedEquals => write!(f, ">>>="),
         }
     }
 }
