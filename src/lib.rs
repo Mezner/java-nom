@@ -139,6 +139,29 @@ impl Display for AssignmentOperator {
     }
 }
 
+#[derive(Clone, Debug)]
+pub enum InfixOperator {
+    Or,
+    And,
+    SingleOr,
+    Xor,
+    SingleAnd,
+    Equals,
+    NotEquals,
+    LessThan,
+    GreaterThan,
+    LessThanOrEqual,
+    GreaterThanOrEqual,
+    ShiftLeft,
+    ShiftRightSigned,
+    ShiftRightUnsigned,
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Modulo,
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
