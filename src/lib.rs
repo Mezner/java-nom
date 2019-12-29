@@ -220,10 +220,70 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("+=")(i)
     }
 
+
+    fn assignment_operator_minus_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("-=")(i)
+    }
+
+
+    fn assignment_operator_times_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("*=")(i)
+    }
+
+
+    fn assignment_operator_divide_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("/=")(i)
+    }
+
+
+    fn assignment_operator_and_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("&=")(i)
+    }
+
+
+    fn assignment_operator_or_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("|=")(i)
+    }
+
+
+    fn assignment_operator_xor_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("^=")(i)
+    }
+
+
+    fn assignment_operator_modulo_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("%=")(i)
+    }
+
+
+    fn assignment_operator_left_shift_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("<<=")(i)
+    }
+
+
+    fn assignment_operator_right_shift_signed_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">>=")(i)
+    }
+
+
+    fn assignment_operator_right_shift_unsigned_equals(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag(">>>=")(i)
+    }
+
     pub fn assignment_operator(i: &str) -> nom::IResult<&str, &str> {
         nom::branch::alt((
             assignment_operator_equals,
-            assignment_operator_plus_equals
+            assignment_operator_plus_equals,
+            assignment_operator_minus_equals,
+            assignment_operator_times_equals,
+            assignment_operator_divide_equals,
+            assignment_operator_and_equals,
+            assignment_operator_or_equals,
+            assignment_operator_xor_equals,
+            assignment_operator_modulo_equals,
+            assignment_operator_left_shift_equals,
+            assignment_operator_right_shift_signed_equals,
+            assignment_operator_right_shift_unsigned_equals
         ))(i)
     }
 
@@ -333,6 +393,66 @@ pub(self) mod parsers {
         fn test_assignment_operator_plus_equals() {
             assert_eq!(assignment_operator_plus_equals("+="), Ok(("", "+=")));
             assert_eq!(assignment_operator_plus_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_minus_equals() {
+            assert_eq!(assignment_operator_minus_equals("-="), Ok(("", "-=")));
+            assert_eq!(assignment_operator_minus_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_times_equals() {
+            assert_eq!(assignment_operator_times_equals("*="), Ok(("", "*=")));
+            assert_eq!(assignment_operator_times_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_divide_equals() {
+            assert_eq!(assignment_operator_divide_equals("/="), Ok(("", "/=")));
+            assert_eq!(assignment_operator_divide_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_and_equals() {
+            assert_eq!(assignment_operator_and_equals("&="), Ok(("", "&=")));
+            assert_eq!(assignment_operator_and_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_or_equals() {
+            assert_eq!(assignment_operator_or_equals("|="), Ok(("", "|=")));
+            assert_eq!(assignment_operator_or_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_xor_equals() {
+            assert_eq!(assignment_operator_xor_equals("^="), Ok(("", "^=")));
+            assert_eq!(assignment_operator_xor_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_modulo_equals() {
+            assert_eq!(assignment_operator_modulo_equals("%="), Ok(("", "%=")));
+            assert_eq!(assignment_operator_modulo_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_left_shift_equals() {
+            assert_eq!(assignment_operator_left_shift_equals("<<="), Ok(("", "<<=")));
+            assert_eq!(assignment_operator_left_shift_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_right_shift_signed_equals() {
+            assert_eq!(assignment_operator_right_shift_signed_equals(">>="), Ok(("", ">>=")));
+            assert_eq!(assignment_operator_right_shift_signed_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assignment_operator_right_shift_unsigned_equals() {
+            assert_eq!(assignment_operator_right_shift_unsigned_equals(">>>="), Ok(("", ">>>=")));
+            assert_eq!(assignment_operator_right_shift_unsigned_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
     }
 }
