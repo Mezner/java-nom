@@ -630,5 +630,119 @@ pub(self) mod parsers {
             assert_eq!(assignment_operator_right_shift_unsigned_equals(">>>="), Ok(("", ">>>=")));
             assert_eq!(assignment_operator_right_shift_unsigned_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
+
+        #[test]
+        fn test_infix_operator_or() {
+            assert_eq!(infix_operator_or("||"), Ok(("", "||")));
+            assert_eq!(infix_operator_or("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_and() {
+            assert_eq!(infix_operator_and("&&"), Ok(("", "&&")));
+            assert_eq!(infix_operator_and("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_single_or() {
+            assert_eq!(infix_operator_single_or("|"), Ok(("", "|")));
+            assert_eq!(infix_operator_single_or("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_xor() {
+            assert_eq!(infix_operator_xor("^"), Ok(("", "^")));
+            assert_eq!(infix_operator_xor("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_single_and() {
+            assert_eq!(infix_operator_single_and("&"), Ok(("", "&")));
+            assert_eq!(infix_operator_single_and("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_equals() {
+            assert_eq!(infix_operator_equals("=="), Ok(("", "==")));
+            assert_eq!(infix_operator_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_not_equals() {
+            assert_eq!(infix_operator_not_equals("!="), Ok(("", "!=")));
+            assert_eq!(infix_operator_not_equals("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_less_than() {
+            assert_eq!(infix_operator_less_than("<"), Ok(("", "<")));
+            assert_eq!(infix_operator_less_than("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_greater_than() {
+            assert_eq!(infix_operator_greater_than(">"), Ok(("", ">")));
+            assert_eq!(infix_operator_greater_than("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_less_than_or_equal() {
+            assert_eq!(infix_operator_less_than_or_equal("<="), Ok(("", "<=")));
+            assert_eq!(infix_operator_less_than_or_equal("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_greater_than_or_equals() {
+            assert_eq!(infix_operator_greater_than_or_equal(">="), Ok(("", ">=")));
+            assert_eq!(infix_operator_greater_than_or_equal("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_left_shift() {
+            assert_eq!(infix_operator_left_shift("<<"), Ok(("", "<<")));
+            assert_eq!(infix_operator_left_shift("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_right_shift_signed() {
+            assert_eq!(infix_operator_right_shift_signed(">>"), Ok(("", ">>")));
+            assert_eq!(infix_operator_right_shift_signed("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_right_shift_unsigned() {
+            assert_eq!(infix_operator_right_shift_unsigned(">>>"), Ok(("", ">>>")));
+            assert_eq!(infix_operator_right_shift_unsigned("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_add() {
+            assert_eq!(infix_operator_add("+"), Ok(("", "+")));
+            assert_eq!(infix_operator_add("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_subtract() {
+            assert_eq!(infix_operator_subtract("-"), Ok(("", "-")));
+            assert_eq!(infix_operator_subtract("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_multiply() {
+            assert_eq!(infix_operator_multiply("*"), Ok(("", "*")));
+            assert_eq!(infix_operator_multiply("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_divide() {
+            assert_eq!(infix_operator_divide("/"), Ok(("", "/")));
+            assert_eq!(infix_operator_divide("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_infix_operator_modulo() {
+            assert_eq!(infix_operator_modulo("%"), Ok(("", "%")));
+            assert_eq!(infix_operator_modulo("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
     }
 }
