@@ -189,6 +189,32 @@ impl InfixOperator {
     }
 }
 
+impl Display for InfixOperator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            InfixOperator::Or => write!(f, "||"),
+            InfixOperator::And => write!(f, "&&"),
+            InfixOperator::SingleOr => write!(f, "|"),
+            InfixOperator::Xor => write!(f, "^"),
+            InfixOperator::SingleAnd => write!(f, "&"),
+            InfixOperator::Equals => write!(f, "=="),
+            InfixOperator::NotEquals => write!(f, "!="),
+            InfixOperator::LessThan => write!(f, "<"),
+            InfixOperator::GreaterThan => write!(f, ">"),
+            InfixOperator::LessThanOrEqual => write!(f, "<="),
+            InfixOperator::GreaterThanOrEqual => write!(f, ">="),
+            InfixOperator::ShiftLeft => write!(f, "<<"),
+            InfixOperator::ShiftRightSigned => write!(f, ">>"),
+            InfixOperator::ShiftRightUnsigned => write!(f, ">>>"),
+            InfixOperator::Add => write!(f, "+"),
+            InfixOperator::Subtract => write!(f, "-"),
+            InfixOperator::Multiply => write!(f, "*"),
+            InfixOperator::Divide => write!(f, "/"),
+            InfixOperator::Modulo => write!(f, "%"),
+        }
+    }
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
