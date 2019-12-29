@@ -162,6 +162,33 @@ pub enum InfixOperator {
     Modulo,
 }
 
+impl InfixOperator {
+    fn from_str(i: &str) -> Result<InfixOperator, Box<dyn Error>> {
+        match i {
+            "||" => Ok(InfixOperator::Or),
+            "&&" => Ok(InfixOperator::And),
+            "|" => Ok(InfixOperator::SingleOr),
+            "^" => Ok(InfixOperator::Xor),
+            "&" => Ok(InfixOperator::SingleAnd),
+            "==" => Ok(InfixOperator::Equals),
+            "!=" => Ok(InfixOperator::NotEquals),
+            "<" => Ok(InfixOperator::LessThan),
+            ">" => Ok(InfixOperator::GreaterThan),
+            "<=" => Ok(InfixOperator::LessThanOrEqual),
+            ">=" => Ok(InfixOperator::GreaterThanOrEqual),
+            "<<" => Ok(InfixOperator::ShiftLeft),
+            ">>" => Ok(InfixOperator::ShiftRightSigned),
+            ">>>" => Ok(InfixOperator::ShiftRightUnsigned),
+            "+" => Ok(InfixOperator::Add),
+            "-" => Ok(InfixOperator::Subtract),
+            "*" => Ok(InfixOperator::Multiply),
+            "/" => Ok(InfixOperator::Divide),
+            "%" => Ok(InfixOperator::Modulo),
+            _ => Err(ParseError::default().into())
+        }
+    }
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
