@@ -215,6 +215,16 @@ impl Display for InfixOperator {
     }
 }
 
+#[derive(Clone, Debug)]
+pub enum PrefixOperator {
+    AddOne,
+    MinusOne,
+    Not,
+    Compliment,
+    Plus,
+    Minus,
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
