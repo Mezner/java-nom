@@ -225,6 +225,33 @@ pub enum PrefixOperator {
     Minus,
 }
 
+impl PrefixOperator {
+    fn from_str(i: &str) -> Result<PrefixOperator, Box<dyn Error>> {
+        match i {
+            "++" => Ok(PrefixOperator::AddOne),
+            "--" => Ok(PrefixOperator::MinusOne),
+            "!" => Ok(PrefixOperator::Not),
+            "~" => Ok(PrefixOperator::Compliment),
+            "+" => Ok(PrefixOperator::Plus),
+            "-" => Ok(PrefixOperator::Minus),
+            _ => Err(ParseError::default().into())
+        }
+    }
+}
+
+impl Display for PrefixOperator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            PrefixOperator::AddOne => write!(f, "++"),
+            PrefixOperator::MinusOne => write!(f, "--"),
+            PrefixOperator::Not => write!(f, "!"),
+            PrefixOperator::Compliment => write!(f, "~"),
+            PrefixOperator::Plus => write!(f, "+"),
+            PrefixOperator::Minus => write!(f, "-"),
+        }
+    }
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
