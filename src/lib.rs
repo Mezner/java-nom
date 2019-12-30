@@ -500,6 +500,41 @@ pub(self) mod parsers {
         ))(i)
     }
 
+    fn prefix_operator_plus_one(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("++")(i)
+    }
+
+    fn prefix_operator_minus_one(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("--")(i)
+    }
+
+    fn prefix_operator_not(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("!")(i)
+    }
+
+    fn prefix_operator_compliment(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("~")(i)
+    }
+
+    fn prefix_operator_plus(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("+")(i)
+    }
+
+    fn prefix_operator_minus(i: &str) -> nom::IResult<&str, &str> {
+        nom::bytes::complete::tag("-")(i)
+    }
+
+    fn prefix_operator(i: &str) -> nom::IResult<&str, &str> {
+        nom::branch::alt((
+            prefix_operator_plus_one,
+            prefix_operator_minus_one,
+            prefix_operator_not,
+            prefix_operator_compliment,
+            prefix_operator_plus,
+            prefix_operator_minus,
+        ))(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
