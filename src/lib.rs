@@ -816,5 +816,41 @@ pub(self) mod parsers {
             assert_eq!(infix_operator_modulo("%"), Ok(("", "%")));
             assert_eq!(infix_operator_modulo("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
+
+        #[test]
+        fn test_prefix_operator_plus_one() {
+            assert_eq!(prefix_operator_plus_one("++"), Ok(("", "++")));
+            assert_eq!(prefix_operator_plus_one("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_prefix_operator_minus_one() {
+            assert_eq!(prefix_operator_minus_one("--"), Ok(("", "--")));
+            assert_eq!(prefix_operator_minus_one("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_prefix_operator_minus() {
+            assert_eq!(prefix_operator_minus("-"), Ok(("", "-")));
+            assert_eq!(prefix_operator_minus("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_prefix_operator_not() {
+            assert_eq!(prefix_operator_not("!"), Ok(("", "!")));
+            assert_eq!(prefix_operator_not("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_prefix_operator_plus() {
+            assert_eq!(prefix_operator_plus("+"), Ok(("", "+")));
+            assert_eq!(prefix_operator_plus("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_prefix_operator_compliment() {
+            assert_eq!(prefix_operator_compliment("~"), Ok(("", "~")));
+            assert_eq!(prefix_operator_compliment("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
     }
 }
