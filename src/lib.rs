@@ -252,6 +252,12 @@ impl Display for PrefixOperator {
     }
 }
 
+#[derive(Clone, Debug)]
+pub enum PostfixOperator {
+    AddOne,
+    MinusOne,
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
@@ -500,11 +506,11 @@ pub(self) mod parsers {
         ))(i)
     }
 
-    fn prefix_operator_plus_one(i: &str) -> nom::IResult<&str, &str> {
+    fn plus_one_operator(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::tag("++")(i)
     }
 
-    fn prefix_operator_minus_one(i: &str) -> nom::IResult<&str, &str> {
+    fn minus_one_operator(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::tag("--")(i)
     }
 
@@ -526,12 +532,19 @@ pub(self) mod parsers {
 
     fn prefix_operator(i: &str) -> nom::IResult<&str, &str> {
         nom::branch::alt((
-            prefix_operator_plus_one,
-            prefix_operator_minus_one,
+            plus_one_operator,
+            minus_one_operator,
             prefix_operator_not,
             prefix_operator_compliment,
             prefix_operator_plus,
             prefix_operator_minus,
+        ))(i)
+    }
+
+    fn postfix_operator(i: &str) -> nom::IResult<&str, &str> {
+        nom::branch::alt((
+            plus_one_operator,
+            minus_one_operator,
         ))(i)
     }
 
@@ -819,14 +832,14 @@ pub(self) mod parsers {
 
         #[test]
         fn test_prefix_operator_plus_one() {
-            assert_eq!(prefix_operator_plus_one("++"), Ok(("", "++")));
-            assert_eq!(prefix_operator_plus_one("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+            assert_eq!(plus_one_operator("++"), Ok(("", "++")));
+            assert_eq!(plus_one_operator("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
 
         #[test]
         fn test_prefix_operator_minus_one() {
-            assert_eq!(prefix_operator_minus_one("--"), Ok(("", "--")));
-            assert_eq!(prefix_operator_minus_one("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+            assert_eq!(minus_one_operator("--"), Ok(("", "--")));
+            assert_eq!(minus_one_operator("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
         }
 
         #[test]
@@ -851,6 +864,13 @@ pub(self) mod parsers {
         fn test_prefix_operator_compliment() {
             assert_eq!(prefix_operator_compliment("~"), Ok(("", "~")));
             assert_eq!(prefix_operator_compliment("="), Err(nom::Err::Error(("=", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_postfix_operator() {
+            assert_eq!(postfix_operator("++"), Ok(("", "++")));
+            assert_eq!(postfix_operator("--"), Ok(("", "--")));
+            assert_eq!(postfix_operator("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
