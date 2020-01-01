@@ -285,15 +285,15 @@ impl Display for BooleanLiteral {
 pub(self) mod parsers {
     type ParseResult<'a> = nom::IResult<&'a str, &'a str>;
 
-    fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
+    fn not_whitespace(i: &str) -> ParseResult {
         nom::bytes::complete::is_not(" \t")(i)
     }
 
-    fn escaped_space(i: &str) -> nom::IResult<&str, &str> {
+    fn escaped_space(i: &str) -> ParseResult {
         nom::combinator::value(" ", nom::bytes::complete::tag("040"))(i)
     }
 
-    fn escaped_backslash(i: &str) -> nom::IResult<&str, &str> {
+    fn escaped_backslash(i: &str) -> ParseResult {
         nom::combinator::recognize(nom::character::complete::char('\\'))(i)
     }
 
@@ -311,40 +311,40 @@ pub(self) mod parsers {
         )(i)
     }
 
-    fn basic_type_byte(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_byte(i: &str) -> ParseResult {
         nom::bytes::complete::tag("byte")(i)
     }
 
-    fn basic_type_short(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_short(i: &str) -> ParseResult {
         nom::bytes::complete::tag("short")(i)
     }
 
-    fn basic_type_char(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_char(i: &str) -> ParseResult {
         nom::bytes::complete::tag("char")(i)
     }
 
-    fn basic_type_int(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_int(i: &str) -> ParseResult {
         nom::bytes::complete::tag("int")(i)
     }
 
-    fn basic_type_long(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_long(i: &str) -> ParseResult {
         nom::bytes::complete::tag("long")(i)
     }
 
-    fn basic_type_float(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_float(i: &str) -> ParseResult {
         nom::bytes::complete::tag("float")(i)
     }
 
-    fn basic_type_double(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_double(i: &str) -> ParseResult {
         nom::bytes::complete::tag("double")(i)
     }
 
-    fn basic_type_boolean(i: &str) -> nom::IResult<&str, &str> {
+    fn basic_type_boolean(i: &str) -> ParseResult {
         nom::bytes::complete::tag("boolean")(i)
     }
 
     //TODO: Remove pub later.
-    pub fn basic_type(i: &str) -> nom::IResult<&str, &str> {
+    pub fn basic_type(i: &str) -> ParseResult {
         nom::branch::alt((
             basic_type_byte,
             basic_type_short,
@@ -357,65 +357,65 @@ pub(self) mod parsers {
         ))(i)
     }
 
-    fn assignment_operator_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("=")(i)
     }
 
-    fn assignment_operator_plus_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_plus_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("+=")(i)
     }
 
 
-    fn assignment_operator_minus_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_minus_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("-=")(i)
     }
 
 
-    fn assignment_operator_times_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_times_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("*=")(i)
     }
 
 
-    fn assignment_operator_divide_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_divide_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("/=")(i)
     }
 
 
-    fn assignment_operator_and_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_and_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("&=")(i)
     }
 
 
-    fn assignment_operator_or_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_or_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("|=")(i)
     }
 
 
-    fn assignment_operator_xor_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_xor_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("^=")(i)
     }
 
 
-    fn assignment_operator_modulo_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_modulo_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("%=")(i)
     }
 
 
-    fn assignment_operator_left_shift_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_left_shift_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("<<=")(i)
     }
 
 
-    fn assignment_operator_right_shift_signed_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_right_shift_signed_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>=")(i)
     }
 
 
-    fn assignment_operator_right_shift_unsigned_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn assignment_operator_right_shift_unsigned_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>>=")(i)
     }
 
-    pub fn assignment_operator(i: &str) -> nom::IResult<&str, &str> {
+    pub fn assignment_operator(i: &str) -> ParseResult {
         nom::branch::alt((
             assignment_operator_equals,
             assignment_operator_plus_equals,
@@ -432,83 +432,83 @@ pub(self) mod parsers {
         ))(i)
     }
 
-    fn infix_operator_or(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_or(i: &str) -> ParseResult {
         nom::bytes::complete::tag("||")(i)
     }
 
-    fn infix_operator_and(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_and(i: &str) -> ParseResult {
         nom::bytes::complete::tag("&&")(i)
     }
 
-    fn infix_operator_single_or(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_single_or(i: &str) -> ParseResult {
         nom::bytes::complete::tag("|")(i)
     }
 
-    fn infix_operator_xor(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_xor(i: &str) -> ParseResult {
         nom::bytes::complete::tag("^")(i)
     }
 
-    fn infix_operator_single_and(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_single_and(i: &str) -> ParseResult {
         nom::bytes::complete::tag("&")(i)
     }
 
-    fn infix_operator_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("==")(i)
     }
 
-    fn infix_operator_not_equals(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_not_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("!=")(i)
     }
 
-    fn infix_operator_less_than(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_less_than(i: &str) -> ParseResult {
         nom::bytes::complete::tag("<")(i)
     }
 
-    fn infix_operator_greater_than(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_greater_than(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">")(i)
     }
 
-    fn infix_operator_less_than_or_equal(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_less_than_or_equal(i: &str) -> ParseResult {
         nom::bytes::complete::tag("<=")(i)
     }
 
-    fn infix_operator_greater_than_or_equal(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_greater_than_or_equal(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">=")(i)
     }
 
-    fn infix_operator_left_shift(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_left_shift(i: &str) -> ParseResult {
         nom::bytes::complete::tag("<<")(i)
     }
 
-    fn infix_operator_right_shift_signed(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_right_shift_signed(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>")(i)
     }
 
-    fn infix_operator_right_shift_unsigned(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_right_shift_unsigned(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>>")(i)
     }
 
-    fn infix_operator_add(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_add(i: &str) -> ParseResult {
         nom::bytes::complete::tag("+")(i)
     }
 
-    fn infix_operator_subtract(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_subtract(i: &str) -> ParseResult {
         nom::bytes::complete::tag("-")(i)
     }
 
-    fn infix_operator_multiply(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_multiply(i: &str) -> ParseResult {
         nom::bytes::complete::tag("*")(i)
     }
 
-    fn infix_operator_divide(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_divide(i: &str) -> ParseResult {
         nom::bytes::complete::tag("/")(i)
     }
 
-    fn infix_operator_modulo(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator_modulo(i: &str) -> ParseResult {
         nom::bytes::complete::tag("%")(i)
     }
 
-    fn infix_operator(i: &str) -> nom::IResult<&str, &str> {
+    fn infix_operator(i: &str) -> ParseResult {
         nom::branch::alt((
             infix_operator_or,
             infix_operator_and,
@@ -532,19 +532,19 @@ pub(self) mod parsers {
         ))(i)
     }
 
-    fn plus_one_operator(i: &str) -> nom::IResult<&str, &str> {
+    fn plus_one_operator(i: &str) -> ParseResult {
         nom::bytes::complete::tag("++")(i)
     }
 
-    fn minus_one_operator(i: &str) -> nom::IResult<&str, &str> {
+    fn minus_one_operator(i: &str) -> ParseResult {
         nom::bytes::complete::tag("--")(i)
     }
 
-    fn prefix_operator_not(i: &str) -> nom::IResult<&str, &str> {
+    fn prefix_operator_not(i: &str) -> ParseResult {
         nom::bytes::complete::tag("!")(i)
     }
 
-    fn prefix_operator_compliment(i: &str) -> nom::IResult<&str, &str> {
+    fn prefix_operator_compliment(i: &str) -> ParseResult {
         nom::bytes::complete::tag("~")(i)
     }
 
