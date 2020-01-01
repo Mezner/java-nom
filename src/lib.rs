@@ -258,6 +258,30 @@ pub enum PostfixOperator {
     MinusOne,
 }
 
+pub enum BooleanLiteral {
+    True,
+    False
+}
+
+impl BooleanLiteral {
+    fn from_str(i: &str) -> Result<BooleanLiteral, Box<dyn Error>> {
+        match i {
+            "true" => Ok(BooleanLiteral::True),
+            "false" => Ok(BooleanLiteral::False),
+            _ => Err(ParseError::default().into()),
+        }
+    }
+}
+
+impl Display for BooleanLiteral {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            BooleanLiteral::True => write!(f, "true"),
+            BooleanLiteral::False => write!(f, "false"),
+        }
+    }
+}
+
 pub(self) mod parsers {
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
