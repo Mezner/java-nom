@@ -283,6 +283,8 @@ impl Display for BooleanLiteral {
 }
 
 pub(self) mod parsers {
+    type ParseResult<'a> = nom::IResult<&'a str, &'a str>;
+
     fn not_whitespace(i: &str) -> nom::IResult<&str, &str> {
         nom::bytes::complete::is_not(" \t")(i)
     }
@@ -569,6 +571,21 @@ pub(self) mod parsers {
         nom::branch::alt((
             plus_one_operator,
             minus_one_operator,
+        ))(i)
+    }
+
+    fn true_literal(i: &str) -> ParseResult {
+        nom::bytes::complete::tag("true")(i)
+    }
+
+    fn false_literal(i: &str) -> ParseResult {
+        nom::bytes::complete::tag("false")(i)
+    }
+
+    fn boolean_literal(i: &str) -> ParseResult {
+        nom::branch::alt((
+            true_literal,
+            false_literal,
         ))(i)
     }
 
@@ -895,6 +912,27 @@ pub(self) mod parsers {
             assert_eq!(postfix_operator("++"), Ok(("", "++")));
             assert_eq!(postfix_operator("--"), Ok(("", "--")));
             assert_eq!(postfix_operator("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_true_literal() {
+            assert_eq!(true_literal("true"), Ok(("", "true")));
+            assert_eq!(true_literal("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+            assert_eq!(true_literal("false"), Err(nom::Err::Error(("false", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_false_literal() {
+            assert_eq!(false_literal("false"), Ok(("", "false")));
+            assert_eq!(false_literal("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+            assert_eq!(false_literal("true"), Err(nom::Err::Error(("true", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_boolean_literal() {
+            assert_eq!(boolean_literal("false"), Ok(("", "false")));
+            assert_eq!(boolean_literal("true"), Ok(("", "true")));
+            assert_eq!(boolean_literal("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
