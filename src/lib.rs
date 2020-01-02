@@ -365,51 +365,41 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("+=")(i)
     }
 
-
     fn assignment_operator_minus_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("-=")(i)
     }
-
 
     fn assignment_operator_times_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("*=")(i)
     }
 
-
     fn assignment_operator_divide_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("/=")(i)
     }
-
 
     fn assignment_operator_and_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("&=")(i)
     }
 
-
     fn assignment_operator_or_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("|=")(i)
     }
-
 
     fn assignment_operator_xor_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("^=")(i)
     }
 
-
     fn assignment_operator_modulo_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("%=")(i)
     }
-
 
     fn assignment_operator_left_shift_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag("<<=")(i)
     }
 
-
     fn assignment_operator_right_shift_signed_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>=")(i)
     }
-
 
     fn assignment_operator_right_shift_unsigned_equals(i: &str) -> ParseResult {
         nom::bytes::complete::tag(">>>=")(i)
