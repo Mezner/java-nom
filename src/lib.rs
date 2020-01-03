@@ -579,6 +579,18 @@ pub(self) mod parsers {
         ))(i)
     }
 
+    fn visibility_public(i: &str) -> ParseResult {
+        nom::bytes::complete::tag("public")(i)
+    }
+
+    fn visibility_protected(i: &str) -> ParseResult {
+        nom::bytes::complete::tag("protected")(i)
+    }
+
+    fn visibility_private(i: &str) -> ParseResult {
+        nom::bytes::complete::tag("private")(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -923,6 +935,24 @@ pub(self) mod parsers {
             assert_eq!(boolean_literal("false"), Ok(("", "false")));
             assert_eq!(boolean_literal("true"), Ok(("", "true")));
             assert_eq!(boolean_literal("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_visiblity_public() {
+            assert_eq!(visibility_public("public"), Ok(("", "public")));
+            assert_eq!(visibility_public("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_visiblity_protected() {
+            assert_eq!(visibility_protected("protected"), Ok(("", "protected")));
+            assert_eq!(visibility_protected("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_visiblity_private() {
+            assert_eq!(visibility_private("private"), Ok(("", "private")));
+            assert_eq!(visibility_private("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
