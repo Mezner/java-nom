@@ -283,6 +283,7 @@ impl Display for BooleanLiteral {
 }
 
 pub(self) mod parsers {
+    use nom::branch::alt;
     use nom::bytes::complete::{tag, take_while, take_while1};
     use nom::sequence::tuple;
     use nom::combinator::recognize;
@@ -609,6 +610,162 @@ pub(self) mod parsers {
             take_while1(letter),
             take_while(letter_or_digit)
         )))(i)
+    }
+
+    fn abstract_keyword(i: &str) -> ParseResult {
+        tag("abstract")(i)
+    }
+
+    fn assert_keyword(i: &str) -> ParseResult {
+        tag("assert")(i)
+    }
+
+    fn break_keyword(i: &str) -> ParseResult {
+        tag("break")(i)
+    }
+
+    fn case_keyword(i: &str) -> ParseResult {
+        tag("case")(i)
+    }
+
+    fn catch_keyword(i: &str) -> ParseResult {
+        tag("catch")(i)
+    }
+
+    fn class_keyword(i: &str) -> ParseResult {
+        tag("class")(i)
+    }
+
+    fn const_keyword(i: &str) -> ParseResult {
+        tag("const")(i)
+    }
+
+    fn continue_keyword(i: &str) -> ParseResult {
+        tag("continue")(i)
+    }
+
+    fn default_keyword(i: &str) -> ParseResult {
+        tag("default")(i)
+    }
+
+    fn do_keyword(i: &str) -> ParseResult {
+        tag("do")(i)
+    }
+
+    fn else_keyword(i: &str) -> ParseResult {
+        tag("else")(i)
+    }
+
+    fn enum_keyword(i: &str) -> ParseResult {
+        tag("enum")(i)
+    }
+
+    fn extends_keyword(i: &str) -> ParseResult {
+        tag("extends")(i)
+    }
+
+    fn final_keyword(i: &str) -> ParseResult {
+        tag("final")(i)
+    }
+
+    fn finally_keyword(i: &str) -> ParseResult {
+        tag("finally")(i)
+    }
+
+    fn for_keyword(i: &str) -> ParseResult {
+        tag("for")(i)
+    }
+
+    fn if_keyword(i: &str) -> ParseResult {
+        tag("if")(i)
+    }
+
+    fn goto_keyword(i: &str) -> ParseResult {
+        tag("goto")(i)
+    }
+
+    fn implements_keyword(i: &str) -> ParseResult {
+        tag("implements")(i)
+    }
+
+    fn import_keyword(i: &str) -> ParseResult {
+        tag("import")(i)
+    }
+
+    fn instanceof_keyword(i: &str) -> ParseResult {
+        tag("instanceof")(i)
+    }
+
+    fn interface_keyword(i: &str) -> ParseResult {
+        tag("interface")(i)
+    }
+
+    fn native_keyword(i: &str) -> ParseResult {
+        tag("native")(i)
+    }
+
+    fn new_keyword(i: &str) -> ParseResult {
+        tag("new")(i)
+    }
+
+    fn package_keyword(i: &str) -> ParseResult {
+        tag("package")(i)
+    }
+
+    fn return_keyword(i: &str) -> ParseResult {
+        tag("return")(i)
+    }
+
+    fn static_keyword(i: &str) -> ParseResult {
+        tag("static")(i)
+    }
+
+    fn strictfp_keyword(i: &str) -> ParseResult {
+        tag("strictfp")(i)
+    }
+
+    fn super_keyword(i: &str) -> ParseResult {
+        tag("super")(i)
+    }
+
+    fn switch_keyword(i: &str) -> ParseResult {
+        tag("switch")(i)
+    }
+
+    fn synchronized_keyword(i: &str) -> ParseResult {
+        tag("synchronized")(i)
+    }
+
+    fn this_keyword(i: &str) -> ParseResult {
+        tag("this")(i)
+    }
+
+    fn throw_keyword(i: &str) -> ParseResult {
+        tag("throw")(i)
+    }
+
+    fn throws_keyword(i: &str) -> ParseResult {
+        tag("throws")(i)
+    }
+
+    fn transient_keyword(i: &str) -> ParseResult {
+        tag("transient")(i)
+    }
+
+    fn try_keyword(i: &str) -> ParseResult {
+        tag("try")(i)
+    }
+
+    fn void_keyword(i: &str) -> ParseResult {
+        tag("void")(i)
+    }
+
+    fn volatile_keyword(i: &str) -> ParseResult {
+        tag("volatile")(i)
+    }
+
+    fn while_keyword(i: &str) -> ParseResult {
+        tag("while")(i)
     }
 
     #[cfg(test)]
@@ -981,6 +1138,240 @@ pub(self) mod parsers {
             assert_eq!(identifier("i"), Ok(("", "i")));
             assert_eq!(identifier("W2"), Ok(("", "W2")));
             assert_eq!(identifier("1stuff"), Err(nom::Err::Error(("1stuff", nom::error::ErrorKind::TakeWhile1))));
+        }
+
+        #[test]
+        fn test_abstract_keyword() {
+            assert_eq!(abstract_keyword("abstract"), Ok(("", "abstract")));
+            assert_eq!(abstract_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_assert_keyword() {
+            assert_eq!(assert_keyword("assert"), Ok(("", "assert")));
+            assert_eq!(assert_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_break_keyword() {
+            assert_eq!(break_keyword("break"), Ok(("", "break")));
+            assert_eq!(break_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_case_keyword() {
+            assert_eq!(case_keyword("case"), Ok(("", "case")));
+            assert_eq!(case_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_catch_keyword() {
+            assert_eq!(catch_keyword("catch"), Ok(("", "catch")));
+            assert_eq!(catch_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_class_keyword() {
+            assert_eq!(class_keyword("class"), Ok(("", "class")));
+            assert_eq!(class_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_const_keyword() {
+            assert_eq!(const_keyword("const"), Ok(("", "const")));
+            assert_eq!(const_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_continue_keyword() {
+            assert_eq!(continue_keyword("continue"), Ok(("", "continue")));
+            assert_eq!(continue_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_default_keyword() {
+            assert_eq!(default_keyword("default"), Ok(("", "default")));
+            assert_eq!(default_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_do_keyword() {
+            assert_eq!(do_keyword("do"), Ok(("", "do")));
+            assert_eq!(do_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_else_keyword() {
+            assert_eq!(else_keyword("else"), Ok(("", "else")));
+            assert_eq!(else_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_enum_keyword() {
+            assert_eq!(enum_keyword("enum"), Ok(("", "enum")));
+            assert_eq!(enum_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_extends_keyword() {
+            assert_eq!(extends_keyword("extends"), Ok(("", "extends")));
+            assert_eq!(extends_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_final_keyword() {
+            assert_eq!(final_keyword("final"), Ok(("", "final")));
+            assert_eq!(final_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_finally_keyword() {
+            assert_eq!(finally_keyword("finally"), Ok(("", "finally")));
+            assert_eq!(finally_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_for_keyword() {
+            assert_eq!(for_keyword("for"), Ok(("", "for")));
+            assert_eq!(for_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_if_keyword() {
+            assert_eq!(if_keyword("if"), Ok(("", "if")));
+            assert_eq!(if_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_goto_keyword() {
+            assert_eq!(goto_keyword("goto"), Ok(("", "goto")));
+            assert_eq!(goto_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_implements_keyword() {
+            assert_eq!(implements_keyword("implements"), Ok(("", "implements")));
+            assert_eq!(implements_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_import_keyword() {
+            assert_eq!(import_keyword("import"), Ok(("", "import")));
+            assert_eq!(import_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_instanceof_keyword() {
+            assert_eq!(instanceof_keyword("instanceof"), Ok(("", "instanceof")));
+            assert_eq!(instanceof_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_interface_keyword() {
+            assert_eq!(interface_keyword("interface"), Ok(("", "interface")));
+            assert_eq!(interface_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_native_keyword() {
+            assert_eq!(native_keyword("native"), Ok(("", "native")));
+            assert_eq!(native_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_new_keyword() {
+            assert_eq!(new_keyword("new"), Ok(("", "new")));
+            assert_eq!(new_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_package_keyword() {
+            assert_eq!(package_keyword("package"), Ok(("", "package")));
+            assert_eq!(package_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_return_keyword() {
+            assert_eq!(return_keyword("return"), Ok(("", "return")));
+            assert_eq!(return_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_static_keyword() {
+            assert_eq!(static_keyword("static"), Ok(("", "static")));
+            assert_eq!(static_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_strictfp_keyword() {
+            assert_eq!(strictfp_keyword("strictfp"), Ok(("", "strictfp")));
+            assert_eq!(strictfp_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_super_keyword() {
+            assert_eq!(super_keyword("super"), Ok(("", "super")));
+            assert_eq!(super_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_switch_keyword() {
+            assert_eq!(switch_keyword("switch"), Ok(("", "switch")));
+            assert_eq!(switch_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_synchronized_keyword() {
+            assert_eq!(synchronized_keyword("synchronized"), Ok(("", "synchronized")));
+            assert_eq!(synchronized_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_this_keyword() {
+            assert_eq!(this_keyword("this"), Ok(("", "this")));
+            assert_eq!(this_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_throw_keyword() {
+            assert_eq!(throw_keyword("throw"), Ok(("", "throw")));
+            assert_eq!(throw_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_throws_keyword() {
+            assert_eq!(throws_keyword("throws"), Ok(("", "throws")));
+            assert_eq!(throws_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_transient_keyword() {
+            assert_eq!(transient_keyword("transient"), Ok(("", "transient")));
+            assert_eq!(transient_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_try_keyword() {
+            assert_eq!(try_keyword("try"), Ok(("", "try")));
+            assert_eq!(try_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_void_keyword() {
+            assert_eq!(void_keyword("void"), Ok(("", "void")));
+            assert_eq!(void_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_volatile_keyword() {
+            assert_eq!(volatile_keyword("volatile"), Ok(("", "volatile")));
+            assert_eq!(volatile_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_while_keyword() {
+            assert_eq!(while_keyword("while"), Ok(("", "while")));
+            assert_eq!(while_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
