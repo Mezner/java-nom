@@ -283,6 +283,10 @@ impl Display for BooleanLiteral {
 }
 
 pub(self) mod parsers {
+    use nom::bytes::complete::{tag, take_while, take_while1};
+    use nom::sequence::tuple;
+    use nom::combinator::recognize;
+
     type ParseResult<'a> = nom::IResult<&'a str, &'a str>;
 
     fn not_whitespace(i: &str) -> ParseResult {
@@ -589,6 +593,22 @@ pub(self) mod parsers {
 
     fn visibility_private(i: &str) -> ParseResult {
         nom::bytes::complete::tag("private")(i)
+    }
+
+    fn letter(i: char) -> bool {
+        i.is_alphabetic() || i == '_' || i == '$'
+    }
+
+    fn letter_or_digit(i: char) -> bool {
+        letter(i) || i.is_numeric()
+    }
+
+    fn identifier(i: &str) -> ParseResult {
+        //TODO: Deal with keyword failures
+        recognize(tuple((
+            take_while1(letter),
+            take_while(letter_or_digit)
+        )))(i)
     }
 
     #[cfg(test)]
@@ -953,6 +973,14 @@ pub(self) mod parsers {
         fn test_visiblity_private() {
             assert_eq!(visibility_private("private"), Ok(("", "private")));
             assert_eq!(visibility_private("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_identifier() {
+            assert_eq!(identifier("_stuff1"), Ok(("", "_stuff1")));
+            assert_eq!(identifier("i"), Ok(("", "i")));
+            assert_eq!(identifier("W2"), Ok(("", "W2")));
+            assert_eq!(identifier("1stuff"), Err(nom::Err::Error(("1stuff", nom::error::ErrorKind::TakeWhile1))));
         }
     }
 }
