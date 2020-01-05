@@ -596,6 +596,14 @@ pub(self) mod parsers {
         nom::bytes::complete::tag("private")(i)
     }
 
+    fn visibility(i: &str) -> ParseResult {
+        alt((
+            visibility_public,
+            visibility_protected,
+            visibility_private,
+        ))(i)
+    }
+
     fn letter(i: char) -> bool {
         i.is_alphabetic() || i == '_' || i == '$'
     }
@@ -771,9 +779,7 @@ pub(self) mod parsers {
     fn modifier(i: &str) -> ParseResult {
         // TODO: Needs annotation processing
         alt((
-            visibility_public,
-            visibility_protected,
-            visibility_private,
+            visibility,
             static_keyword,
             abstract_keyword,
             final_keyword,
