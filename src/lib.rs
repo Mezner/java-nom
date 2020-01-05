@@ -768,6 +768,23 @@ pub(self) mod parsers {
         tag("while")(i)
     }
 
+    fn modifier(i: &str) -> ParseResult {
+        // TODO: Needs annotation processing
+        alt((
+            visibility_public,
+            visibility_protected,
+            visibility_private,
+            static_keyword,
+            abstract_keyword,
+            final_keyword,
+            native_keyword,
+            synchronized_keyword,
+            transient_keyword,
+            volatile_keyword,
+            strictfp_keyword,
+        ))(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -1372,6 +1389,14 @@ pub(self) mod parsers {
         fn test_while_keyword() {
             assert_eq!(while_keyword("while"), Ok(("", "while")));
             assert_eq!(while_keyword("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_modifier() {
+            assert_eq!(modifier("public"), Ok(("", "public")));
+            assert_eq!(modifier("final"), Ok(("", "final")));
+            assert_eq!(modifier("strictfp"), Ok(("", "strictfp")));
+            assert_eq!(modifier("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
