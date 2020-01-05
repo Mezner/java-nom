@@ -613,11 +613,18 @@ pub(self) mod parsers {
     }
 
     fn identifier(i: &str) -> ParseResult {
-        //TODO: Deal with keyword failures
-        recognize(tuple((
-            take_while1(letter),
-            take_while(letter_or_digit)
-        )))(i)
+        let keyword = keywords(i);
+        match keyword {
+            Ok((_, p)) => Err(nom::Err::Error((p, nom::error::ErrorKind::Tag))),
+            Err(nom::Err::Error((val, _))) => {
+                recognize(tuple((
+                    take_while1(letter),
+                    take_while(letter_or_digit)
+                )))(val)
+            },
+            _ => keyword
+        }
+
     }
 
     fn abstract_keyword(i: &str) -> ParseResult {
@@ -1207,6 +1214,12 @@ pub(self) mod parsers {
             assert_eq!(identifier("i"), Ok(("", "i")));
             assert_eq!(identifier("W2"), Ok(("", "W2")));
             assert_eq!(identifier("1stuff"), Err(nom::Err::Error(("1stuff", nom::error::ErrorKind::TakeWhile1))));
+        }
+
+        #[test]
+        fn test_identifier_disallows_keywords() {
+            assert_eq!(identifier("byte"), Err(nom::Err::Error(("byte", nom::error::ErrorKind::Tag))));
+            assert_eq!(identifier("volatile"), Err(nom::Err::Error(("volatile", nom::error::ErrorKind::Tag))));
         }
 
         #[test]
