@@ -791,6 +791,52 @@ pub(self) mod parsers {
         ))(i)
     }
 
+    fn keywords(i: &str) -> ParseResult {
+        // Because alt only takes so may functions, we break it into
+        // sub-alts
+        alt((
+            basic_type,
+            modifier,
+            alt((
+                assert_keyword,
+                break_keyword,
+                case_keyword,
+                catch_keyword,
+                class_keyword,
+                const_keyword,
+                continue_keyword,
+                default_keyword,
+                do_keyword,
+                else_keyword,
+                enum_keyword,
+            )),
+            alt((
+                extends_keyword,
+                finally_keyword,
+                for_keyword,
+                goto_keyword,
+                implements_keyword,
+                import_keyword,
+                instanceof_keyword,
+                interface_keyword,
+                new_keyword,
+                package_keyword,
+                return_keyword,
+                super_keyword,
+                switch_keyword,
+            )),
+            synchronized_keyword,
+            this_keyword,
+            throw_keyword,
+            throws_keyword,
+            transient_keyword,
+            try_keyword,
+            void_keyword,
+            volatile_keyword,
+            while_keyword,
+        ))(i)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -1403,6 +1449,17 @@ pub(self) mod parsers {
             assert_eq!(modifier("final"), Ok(("", "final")));
             assert_eq!(modifier("strictfp"), Ok(("", "strictfp")));
             assert_eq!(modifier("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_keywords() {
+            assert_eq!(keywords("byte"), Ok(("", "byte")));
+            assert_eq!(keywords("assert"), Ok(("", "assert")));
+            assert_eq!(keywords("catch"), Ok(("", "catch")));
+            assert_eq!(keywords("extends"), Ok(("", "extends")));
+            assert_eq!(keywords("return"), Ok(("", "return")));
+            assert_eq!(keywords("synchronized"), Ok(("", "synchronized")));
+            assert_eq!(keywords("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
         }
     }
 }
