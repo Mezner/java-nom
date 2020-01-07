@@ -287,6 +287,7 @@ pub(self) mod parsers {
     use nom::bytes::complete::{tag, take_while, take_while1};
     use nom::sequence::tuple;
     use nom::combinator::recognize;
+    use nom::multi::separated_nonempty_list;
 
     type ParseResult<'a> = nom::IResult<&'a str, &'a str>;
 
@@ -842,6 +843,22 @@ pub(self) mod parsers {
             volatile_keyword,
             while_keyword,
         ))(i)
+    }
+
+    fn qualified_identifier(i: &str) -> nom::IResult<&str, String> {
+        let result = separated_nonempty_list(tag("."), identifier)(i);
+
+        match result {
+            Err(e) => Err(e),
+            Ok((remainder, list)) => {
+                let qualified_vec: Vec<String> = list.iter()
+                    .map(|i| i.to_string()).collect();
+                Ok((
+                    remainder,
+                    qualified_vec.join(".")
+                ))
+            }
+        }
     }
 
     #[cfg(test)]
@@ -1473,6 +1490,13 @@ pub(self) mod parsers {
             assert_eq!(keywords("return"), Ok(("", "return")));
             assert_eq!(keywords("synchronized"), Ok(("", "synchronized")));
             assert_eq!(keywords("!"), Err(nom::Err::Error(("!", nom::error::ErrorKind::Tag))));
+        }
+
+        #[test]
+        fn test_qualified_identifier() {
+            assert_eq!(qualified_identifier("stuff.stuff"), Ok(("", "stuff.stuff".to_string())));
+            assert_eq!(qualified_identifier("com.russellmyers.QualifiedIdentifier"), Ok(("", "com.russellmyers.QualifiedIdentifier".to_string())));
+            assert_eq!(qualified_identifier("123nope"), Err(nom::Err::Error(("123nope", nom::error::ErrorKind::TakeWhile1))));
         }
     }
 }
